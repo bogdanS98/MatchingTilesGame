@@ -1,0 +1,186 @@
+MatchingTilesFont.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+letterA
+  rotate: false
+  xy: 48, 398
+  size: 61, 64
+  orig: 61, 64
+  offset: 0, 0
+  index: -1
+letterB
+  rotate: false
+  xy: 58, 665
+  size: 50, 66
+  orig: 50, 66
+  offset: 0, 0
+  index: -1
+letterC
+  rotate: false
+  xy: 52, 597
+  size: 52, 66
+  orig: 52, 66
+  offset: 0, 0
+  index: -1
+letterD
+  rotate: false
+  xy: 2, 665
+  size: 54, 66
+  orig: 54, 66
+  offset: 0, 0
+  index: -1
+letterE
+  rotate: false
+  xy: 2, 464
+  size: 45, 64
+  orig: 45, 64
+  offset: 0, 0
+  index: -1
+letterF
+  rotate: false
+  xy: 2, 398
+  size: 44, 64
+  orig: 44, 64
+  offset: 0, 0
+  index: -1
+letterG
+  rotate: false
+  xy: 50, 733
+  size: 52, 66
+  orig: 52, 66
+  offset: 0, 0
+  index: -1
+letterH
+  rotate: false
+  xy: 49, 464
+  size: 51, 64
+  orig: 51, 64
+  offset: 0, 0
+  index: -1
+letterI
+  rotate: false
+  xy: 2, 530
+  size: 22, 64
+  orig: 22, 64
+  offset: 0, 0
+  index: -1
+letterJ
+  rotate: false
+  xy: 2, 869
+  size: 42, 66
+  orig: 42, 66
+  offset: 0, 0
+  index: -1
+letterK
+  rotate: false
+  xy: 2, 2
+  size: 53, 64
+  orig: 53, 64
+  offset: 0, 0
+  index: -1
+letterL
+  rotate: false
+  xy: 2, 68
+  size: 44, 64
+  orig: 44, 64
+  offset: 0, 0
+  index: -1
+letterM
+  rotate: false
+  xy: 48, 68
+  size: 66, 64
+  orig: 66, 64
+  offset: 0, 0
+  index: -1
+letterN
+  rotate: false
+  xy: 62, 332
+  size: 53, 64
+  orig: 53, 64
+  offset: 0, 0
+  index: -1
+letterO
+  rotate: false
+  xy: 55, 801
+  size: 60, 66
+  orig: 60, 66
+  offset: 0, 0
+  index: -1
+letterP
+  rotate: false
+  xy: 2, 597
+  size: 48, 65
+  orig: 48, 65
+  offset: 0, 0
+  index: -1
+letterQ
+  rotate: false
+  xy: 46, 869
+  size: 60, 79
+  orig: 60, 79
+  offset: 0, 0
+  index: -1
+letterR
+  rotate: false
+  xy: 26, 530
+  size: 51, 65
+  orig: 51, 65
+  offset: 0, 0
+  index: -1
+letterS
+  rotate: false
+  xy: 2, 733
+  size: 46, 66
+  orig: 46, 66
+  offset: 0, 0
+  index: -1
+letterT
+  rotate: false
+  xy: 2, 134
+  size: 52, 64
+  orig: 52, 64
+  offset: 0, 0
+  index: -1
+letterU
+  rotate: false
+  xy: 2, 801
+  size: 51, 66
+  orig: 51, 66
+  offset: 0, 0
+  index: -1
+letterV
+  rotate: false
+  xy: 56, 134
+  size: 61, 64
+  orig: 61, 64
+  offset: 0, 0
+  index: -1
+letterW
+  rotate: false
+  xy: 2, 266
+  size: 76, 64
+  orig: 76, 64
+  offset: 0, 0
+  index: -1
+letterX
+  rotate: false
+  xy: 2, 332
+  size: 58, 64
+  orig: 58, 64
+  offset: 0, 0
+  index: -1
+letterY
+  rotate: false
+  xy: 2, 200
+  size: 57, 64
+  orig: 57, 64
+  offset: 0, 0
+  index: -1
+letterZ
+  rotate: false
+  xy: 57, 2
+  size: 50, 64
+  orig: 50, 64
+  offset: 0, 0
+  index: -1
