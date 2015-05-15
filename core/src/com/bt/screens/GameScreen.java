@@ -25,7 +25,7 @@ public class GameScreen extends Screen {
     private int colorNum = Var.max_color;
     private int margin;
     private Button backButton;
-    private BitmapFont font;
+    public static BitmapFont font;
     private SpriteBatch batch;
     private int boardHeight;
     boolean release;
@@ -47,22 +47,20 @@ public class GameScreen extends Screen {
     private float score;
     private float upScore;
     private Label scoreLabel;
+    private int lineHeight = 0;
 
 
     public GameScreen() {
 
+        lineHeight = Math.round(2.5f * font.getCapHeight());
         deltaButton = 70;
-        font = new BitmapFont();
         scoreLabel = new Label("Score : " + 0, font);
-        scoreLabel.setX(Var.WIDTH / 2 - scoreLabel.getWidth() / 2);
-        scoreLabel.setY(Var.HEIGHT - scoreLabel.getHeight());
         label = new Label("Choose your difficulty", font);
-        label.setX(Var.WIDTH / 2 - label.getWidth() / 2);
-        label.setY(Var.HEIGHT / 2 + 2 * deltaButton);
         easyButton = new Button("EASY", font, new ButtonHandler() {
             @Override
             public void OnClick() {
                 if(Gdx.input.justTouched()){
+                    easyButton.setClickColor();
                     if(SettingsScreen.isSoundOn())AssetLoader.getClickSound().play();
                     selected = true;
                     difDim = Var.easy_dim;
@@ -78,6 +76,7 @@ public class GameScreen extends Screen {
             @Override
             public void OnClick() {
                 if(Gdx.input.justTouched()){
+                    mediumButton.setClickColor();
                     if(SettingsScreen.isSoundOn())AssetLoader.getClickSound().play();
                     selected = true;
                     difDim = Var.medium_dim;
@@ -93,6 +92,7 @@ public class GameScreen extends Screen {
             @Override
             public void OnClick() {
                 if(Gdx.input.justTouched()){
+                    hardButton.setClickColor();
                     if(SettingsScreen.isSoundOn())AssetLoader.getClickSound().play();
                     selected = true;
                     difDim = Var.hard_dim;
@@ -108,6 +108,7 @@ public class GameScreen extends Screen {
             @Override
             public void OnClick() {
                 if(Gdx.input.justTouched()){
+                    insaneButton.setClickColor();
                     if(SettingsScreen.isSoundOn())AssetLoader.getClickSound().play();
                     selected = true;
                     difDim = Var.insane_dim;
@@ -120,7 +121,15 @@ public class GameScreen extends Screen {
         insaneButton.setX(Var.WIDTH / 2 - insaneButton.getWidth() / 2);
         insaneButton.setY(Var.HEIGHT / 2 - deltaButton / 2);
 
-        backButton = new Button("Back", font, new ScreenSwitchHandler(ScreenState.MAIN_MENU));
+        backButton = new Button("Back", font, new ScreenSwitchHandler(ScreenState.MAIN_MENU){
+            @Override
+            public void OnClick() {
+                super.OnClick();
+                if(Gdx.input.justTouched()){
+                    backButton.setClickColor();
+                }
+            }
+        });
         crtLevel = 1;
         finishedTiles = new Array<Tile>();
         selected = false;
@@ -206,6 +215,7 @@ public class GameScreen extends Screen {
         batch = new SpriteBatch();
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
+        batch.draw(AssetLoader.getBackground(), 0, 0, Var.WIDTH, Var.HEIGHT);
         backButton.draw(batch, camera);
         if(!selected){
             batch.draw(AssetLoader.getBackground(), 0, 0, Var.WIDTH, Var.HEIGHT);
@@ -283,10 +293,24 @@ public class GameScreen extends Screen {
 
     @Override
     public void resize(int width, int height) {
+        int centerX = width / 2;
+        int centerY = height / 2;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Var.WIDTH, Var.HEIGHT);
-        backButton.setX(Var.WIDTH - (backButton.getWidth() + 420));
-        backButton.setY(Var.HEIGHT - 30);
+        label.setX(centerX - label.getWidth() / 2);
+        label.setY(centerY + 3 * lineHeight);
+        scoreLabel.setX(centerX - (scoreLabel.getWidth()) / 2);
+        scoreLabel.setY(Var.HEIGHT - lineHeight);
+        backButton.setX(centerX - (backButton.getWidth() * 4));
+        backButton.setY(Var.HEIGHT - lineHeight);
+        easyButton.setX(centerX - easyButton.getWidth() / 2);
+        easyButton.setY(centerY + lineHeight);
+        mediumButton.setX(centerX - mediumButton.getWidth() / 2);
+        mediumButton.setY(centerY);
+        hardButton.setX(centerX - hardButton.getWidth() / 2);
+        hardButton.setY(centerY - lineHeight);
+        insaneButton.setX(centerX - insaneButton.getWidth() / 2);
+        insaneButton.setY(centerY - 2 * lineHeight);
     }
 
     @Override

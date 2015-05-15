@@ -19,9 +19,10 @@ public class ScreenSwitchHandler implements ButtonHandler {
         @Override
         public void OnClick() {
             if(Gdx.input.justTouched()){
-                if(SettingsScreen.isSoundOn())
+                if(SettingsScreen.isSoundOn()){
                     AssetLoader.getClickSound().play();
+                }
+             ScreenManager.getInstance().show(screen);
             }
-            ScreenManager.getInstance().show(screen);
         }
 }

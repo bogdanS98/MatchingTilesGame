@@ -20,7 +20,7 @@ public class SettingsScreen extends Screen {
 
     private Preferences prefs = Gdx.app.getPreferences("MatchingTiles-preferences");
     private SpriteBatch batch;
-    private BitmapFont font;
+    public static BitmapFont font;
     private Label label = null;
     private Button backButton;
     private Button soundButton;
@@ -31,12 +31,13 @@ public class SettingsScreen extends Screen {
     private int lineHeight = 0;
 
     public SettingsScreen() {
+
         batch  = new SpriteBatch();
-        font = new BitmapFont();
         soundButton = new Button(soundOn ? "Sound ON" : "Sound OFF", font, new ButtonHandler() {
             @Override
             public void OnClick() {
                 if(Gdx.input.justTouched()){
+                    soundButton.setClickColor();
                     if(soundOn == true){
                         soundOn = false;
                         soundButton.setCaption("Sound OFF");
@@ -55,6 +56,7 @@ public class SettingsScreen extends Screen {
             @Override
             public void OnClick() {
                 if(Gdx.input.justTouched()){
+                    musicButton.setClickColor();
                     if(musicOn == true){
                         musicOn = false;
                         musicButton.setCaption("Music OFF");
@@ -72,7 +74,15 @@ public class SettingsScreen extends Screen {
                }
             }
         });
-        backButton = new Button("Back", font, new ScreenSwitchHandler(ScreenState.MAIN_MENU));
+        backButton = new Button("Back", font, new ScreenSwitchHandler(ScreenState.MAIN_MENU){
+            @Override
+            public void OnClick() {
+                super.OnClick();
+                if(Gdx.input.justTouched()){
+                    backButton.setClickColor();
+                }
+            }
+        });
         lineHeight = Math.round(2.5f * font.getCapHeight());
         label = new Label("Settings", font);
     }
@@ -100,8 +110,8 @@ public class SettingsScreen extends Screen {
         int centerY = height / 2;
         label.setX(centerX - label.getWidth() / 2);
         label.setY(centerY + 3 * lineHeight);
-        backButton.setX(Var.WIDTH - (backButton.getWidth() + 420));
-        backButton.setY(Var.HEIGHT - 30);
+        backButton.setX(centerX - (backButton.getWidth() * 4));
+        backButton.setY(Var.HEIGHT - lineHeight);
         soundButton.setX(centerX - soundButton.getWidth() / 2);
         soundButton.setY(centerY);
         musicButton.setX(centerX - musicButton.getWidth() / 2);

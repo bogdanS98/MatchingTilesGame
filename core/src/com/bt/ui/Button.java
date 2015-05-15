@@ -15,7 +15,7 @@ import com.bt.handlers.ButtonHandler;
 public class Button {
 
     private static final Color NORMAL_COLOR = new Color(1f, 1f, 1f, 0.7f);
-    private static final Color HOVER_COLOR = new Color(0f, 1f, 0f, 1f);
+    private static final Color CLICK_COLOR = new Color(0f, 1f, 0f, 1f);
     private String caption;
     private BitmapFont font;
     private ButtonHandler handler;
@@ -55,11 +55,13 @@ public class Button {
         Vector3 cursor = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
         camera.unproject(cursor);
         boolean isIntersected = bounds.contains(cursor.x, cursor.y);
-        font.setColor(isIntersected ? HOVER_COLOR : NORMAL_COLOR);
+        font.setColor(/*isIntersected ? CLICK_COLOR : */NORMAL_COLOR);
         font.draw(batch, caption, x, y);
         font.setColor(color);
-        if(isIntersected && Gdx.input.isTouched())
+        if(isIntersected && Gdx.input.isTouched()){
             handler.OnClick();
+            font.setColor(CLICK_COLOR);
+        }
     }
 
     private void setDimensions(){
@@ -96,5 +98,8 @@ public class Button {
         return height;
     }
 
+    public void setClickColor(){
+        font.setColor(CLICK_COLOR);
+    }
 
 }

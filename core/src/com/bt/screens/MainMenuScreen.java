@@ -18,7 +18,7 @@ import com.bt.vars.Var;
 public class MainMenuScreen extends Screen{
 
     private SpriteBatch batch;
-    private BitmapFont font;
+    public static BitmapFont font;
     private Label label;
     private Button playButton;
     private Button exitButton;
@@ -28,16 +28,30 @@ public class MainMenuScreen extends Screen{
 
     public MainMenuScreen(){
         batch  = new SpriteBatch();
-        font = new BitmapFont();
         lineHeight = Math.round(2.5f * font.getCapHeight());
         label = new Label("Matching Tiles", font);
-        playButton = new Button("Play", font, new ScreenSwitchHandler(ScreenState.GAME));
-        settingsButton = new Button("Settings", font, new ScreenSwitchHandler(ScreenState.SETTINGS));
+        playButton = new Button("Play", font, new ScreenSwitchHandler(ScreenState.GAME){
+            @Override
+            public void OnClick() {
+                super.OnClick();
+                playButton.setClickColor();
+            }
+        });
+        settingsButton = new Button("Settings", font, new ScreenSwitchHandler(ScreenState.SETTINGS){
+            @Override
+            public void OnClick() {
+                super.OnClick();
+                settingsButton.setClickColor();
+            }
+        });
         exitButton = new Button("Exit", font, new ButtonHandler() {
             @Override
             public void OnClick() {
                 if(Gdx.input.justTouched()){
-                    AssetLoader.getClickSound().play();
+                    if(SettingsScreen.isSoundOn()){
+                        AssetLoader.getClickSound().play();
+                    }
+                    settingsButton.setClickColor();
                     Gdx.app.exit();
                 }
             }

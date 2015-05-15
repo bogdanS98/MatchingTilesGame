@@ -11,13 +11,13 @@ public class Label {
 
     private static final Color COLOR = new Color(1f, 1f, 1f, 1f);
     private String caption = null;
-    private BitmapFont font = null;
+    private static BitmapFont font = null;
     private int x;
     private int y;
     private int width;
     private int height;
 
-    public Label(String caption, BitmapFont font, int x, int y){
+    public Label(String caption, BitmapFont font , int x, int y){
         this.caption = caption;
         this.font = font;
         this.x = x;

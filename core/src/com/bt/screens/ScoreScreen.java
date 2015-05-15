@@ -21,6 +21,6 @@ public class ScoreScreen extends Screen {
     private int lineHeight = 0;
 
     public ScoreScreen(){
-
+        
     }
 }

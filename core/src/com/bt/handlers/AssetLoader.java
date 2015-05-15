@@ -21,13 +21,13 @@ public class AssetLoader {
     private static Sound badSound;
 
     public static void init() {
-        tiles = new TextureAtlas(Gdx.files.internal("android/assets/tilecolor.pack"));
-        background = new Texture(Gdx.files.internal("android/assets/menubackground.png"));
-        music = Gdx.audio.newMusic(Gdx.files.internal("android/assets/music.wav"));
-        clickSound = Gdx.audio.newSound(Gdx.files.internal("android/assets/click.mp3"));
-        goodSound = Gdx.audio.newSound(Gdx.files.internal("android/assets/goodsound.mp3"));
-        badSound = Gdx.audio.newSound(Gdx.files.internal("android/assets/badsound.mp3"));
-        tileSound = Gdx.audio.newSound(Gdx.files.internal("android/assets/tilesound.mp3"));
+        tiles = new TextureAtlas(Gdx.files.internal("tilecolor.pack"));
+        background = new Texture(Gdx.files.internal("menubackground.png"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("music.wav"));
+        clickSound = Gdx.audio.newSound(Gdx.files.internal("click.mp3"));
+        goodSound = Gdx.audio.newSound(Gdx.files.internal("goodsound.mp3"));
+        badSound = Gdx.audio.newSound(Gdx.files.internal("badsound.mp3"));
+        tileSound = Gdx.audio.newSound(Gdx.files.internal("tilesound.mp3"));
     }
 
     public static Texture getBackground(){
@@ -54,6 +54,6 @@ public class AssetLoader {
         background.dispose();
         tiles.dispose();
         clickSound.dispose();
-        //music.dispose();
+        music.dispose();
     }
 }
