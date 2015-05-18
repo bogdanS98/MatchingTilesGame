@@ -10,9 +10,9 @@ import com.bt.screens.SettingsScreen;
  */
 public class ScreenSwitchHandler implements ButtonHandler {
 
-        private ScreenState screen = null;
+    private ScreenState screen = null;
 
-        public ScreenSwitchHandler(ScreenState screen) {
+    public ScreenSwitchHandler(ScreenState screen) {
             this.screen = screen;
         }
 

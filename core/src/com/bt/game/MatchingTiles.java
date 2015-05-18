@@ -24,22 +24,22 @@ public class MatchingTiles extends Game {
 		camera = new OrthographicCamera();
 		viewport = new ExtendViewport(Var.WIDTH, Var.HEIGHT, Var.WIDTH, 0, camera);
 
-		viewport.apply(true);
 		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 		camera.update();
 
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("roboto.ttf"));
-		font = createFont(generator, 28);
+		font = createFont(generator, 20);
 		MainMenuScreen.font = this.font;
 		SettingsScreen.font = this.font;
 		GameScreen.font = this.font;
 		generator.dispose();
 
 		AssetLoader.init();
-		AssetLoader.getMusic().setVolume(0.1f);
-		AssetLoader.getMusic().setLooping(true);
-		AssetLoader.getMusic().play();
-
+		if(SettingsScreen.prefs.getBoolean("musicOn")){
+			AssetLoader.getMusic().setVolume(0.1f);
+			AssetLoader.getMusic().setLooping(true);
+			AssetLoader.getMusic().play();
+		}
 		ScreenManager.getInstance().initialize(this);
 		ScreenManager.getInstance().show(ScreenState.MAIN_MENU);
 

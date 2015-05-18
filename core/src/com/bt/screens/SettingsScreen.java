@@ -18,17 +18,18 @@ import com.bt.vars.Var;
  */
 public class SettingsScreen extends Screen {
 
-    private Preferences prefs = Gdx.app.getPreferences("MatchingTiles-preferences");
+    public static Preferences prefs = Gdx.app.getPreferences("MatchingTiles-preferences");
     private SpriteBatch batch;
     public static BitmapFont font;
     private Label label = null;
     private Button backButton;
     private Button soundButton;
     private Button musicButton;
-    private static boolean soundOn = true;
-    private static boolean musicOn = true;
+    private Var var = new Var();
     private OrthographicCamera camera = null;
     private int lineHeight = 0;
+    private static boolean soundOn = prefs.getBoolean("soundOn");
+    private static boolean musicOn =  prefs.getBoolean("musicOn");;
 
     public SettingsScreen() {
 
@@ -43,11 +44,13 @@ public class SettingsScreen extends Screen {
                         soundButton.setCaption("Sound OFF");
                         AssetLoader.getClickSound().play();
                         prefs.putBoolean("soundOn", false);
+                        prefs.flush();
                     }
                     else {
                         soundOn = true;
                         soundButton.setCaption("Sound ON");
                         prefs.putBoolean("soundOn", true);
+                        prefs.flush();
                     }
                 }
             }
@@ -61,6 +64,7 @@ public class SettingsScreen extends Screen {
                         musicOn = false;
                         musicButton.setCaption("Music OFF");
                         prefs.putBoolean("musicOn", false);
+                        prefs.flush();
                         if(soundOn)AssetLoader.getClickSound().play();
                         AssetLoader.getMusic().stop();
                     }
@@ -68,7 +72,10 @@ public class SettingsScreen extends Screen {
                         musicOn = true;
                         musicButton.setCaption("Music ON");
                         prefs.putBoolean("musicOn", true);
+                        prefs.flush();
                         if(soundOn)AssetLoader.getClickSound().play();
+                        AssetLoader.getMusic().setVolume(0.1f);
+                        AssetLoader.getMusic().setLooping(true);
                         AssetLoader.getMusic().play();
                     }
                }
@@ -110,12 +117,12 @@ public class SettingsScreen extends Screen {
         int centerY = height / 2;
         label.setX(centerX - label.getWidth() / 2);
         label.setY(centerY + 3 * lineHeight);
-        backButton.setX(centerX - (backButton.getWidth() * 4));
-        backButton.setY(Var.HEIGHT - lineHeight);
         soundButton.setX(centerX - soundButton.getWidth() / 2);
         soundButton.setY(centerY);
         musicButton.setX(centerX - musicButton.getWidth() / 2);
         musicButton.setY(centerY - lineHeight);
+        backButton.setX(centerX - backButton.getWidth() / 2);
+        backButton.setY(centerY - 3 * lineHeight);
         batch.end();
     }
 
@@ -139,18 +146,13 @@ public class SettingsScreen extends Screen {
         super.resume();
     }
 
-    @Override
-    public void dispose() {
-        batch.dispose();
-        font.dispose();
-        AssetLoader.dispose();
-    }
-
-    public static boolean isSoundOn() {
+    public static boolean isSoundOn(){
         return soundOn;
     }
 
-    public static boolean isMusicOn() {
-        return musicOn;
+    @Override
+    public void dispose() {
+        batch.dispose();
+        AssetLoader.dispose();
     }
 }

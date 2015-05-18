@@ -25,13 +25,6 @@ public enum ScreenState {
         protected com.badlogic.gdx.Screen getScreenInstance() {
             return new SettingsScreen();
         }
-    },
-
-    SCORE {
-        @Override
-        protected com.badlogic.gdx.Screen getScreenInstance() {
-            return new ScoreScreen();
-        }
     };
 
     protected abstract com.badlogic.gdx.Screen getScreenInstance();

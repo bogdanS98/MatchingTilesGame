@@ -17,6 +17,7 @@ import com.bt.vars.Var;
  */
 public class MainMenuScreen extends Screen{
 
+    private Var var = new Var();
     private SpriteBatch batch;
     public static BitmapFont font;
     private Label label;

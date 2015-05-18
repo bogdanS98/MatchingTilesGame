@@ -21,40 +21,56 @@ import com.bt.vars.Var;
 public class GameScreen extends Screen {
 
     private Tile[][] tiles;
-    private int tileSize;
-    private int colorNum = Var.max_color;
-    private int margin;
-    private Button backButton;
+    private Array<Tile> finishedTiles;
     public static BitmapFont font;
     private SpriteBatch batch;
+
     private int boardHeight;
-    boolean release;
     private int maxLevel;
     private int crtLevel;
     private int difDim;
-    private Array<Tile> finishedTiles;
-    private boolean displaySol;
+    private int tileSize;
+    private int colorNum = Var.max_color;
+    private int margin;
+    private int deltaButton;
+    private int lineHeight = 0;
+    private int centerX;
+    private int centerY;
+
     private float timer;
+    private float endTimer;
+    private float score;
+    private float upScore;
+
+    private boolean release;
+    private boolean displaySol;
     private boolean animationPlaying;
     private boolean selected;
+    private boolean over;
+
     private Button easyButton;
     private Button mediumButton;
     private Button hardButton;
     private Button insaneButton;
-    private int deltaButton;
-    private Label label;
-    private float endTimer;
-    private float score;
-    private float upScore;
-    private Label scoreLabel;
-    private int lineHeight = 0;
+    private Button playAgainButton;
+    private Button backButton;
+    private Button gameBackButton;
+    private Button exitButton;
 
+    private Label label;
+    private Label highscoreLabel;
+    private Label remainTime;
+    private Label scoreLabel;
+    private Label roundLabel;
 
     public GameScreen() {
 
         lineHeight = Math.round(2.5f * font.getCapHeight());
         deltaButton = 70;
-        scoreLabel = new Label("Score : " + 0, font);
+        highscoreLabel = new Label("", font);
+        remainTime = new Label("", font);
+        scoreLabel = new Label("", font);
+        roundLabel = new Label("", font);
         label = new Label("Choose your difficulty", font);
         easyButton = new Button("EASY", font, new ButtonHandler() {
             @Override
@@ -66,12 +82,10 @@ public class GameScreen extends Screen {
                     difDim = Var.easy_dim;
                     maxLevel = Var.easy_maxLevel;
                     createLevel();
-                    createFinished(3 + crtLevel / difDim, 3 + crtLevel / (difDim - 1));
+                    createFinished(3 + crtLevel / (maxLevel / 3), 3 + crtLevel / (maxLevel / 3)  + difDim / 5);
                 }
             }
         });
-        easyButton.setX(Var.WIDTH / 2 - easyButton.getWidth() / 2);
-        easyButton.setY(Var.HEIGHT / 2 + deltaButton);
         mediumButton = new Button("MEDIUM", font, new ButtonHandler() {
             @Override
             public void OnClick() {
@@ -82,12 +96,10 @@ public class GameScreen extends Screen {
                     difDim = Var.medium_dim;
                     maxLevel = Var.medium_maxLevel;
                     createLevel();
-                    createFinished(3 + crtLevel / difDim, 3 + crtLevel / (difDim - 1));
+                    createFinished(3 + crtLevel / (maxLevel / 3), 3 + crtLevel / (maxLevel / 3)  + difDim / 5);
                 }
             }
         });
-        mediumButton.setX(Var.WIDTH / 2 - mediumButton.getWidth() / 2);
-        mediumButton.setY(Var.HEIGHT / 2 + deltaButton / 2);
         hardButton = new Button("HARD", font, new ButtonHandler() {
             @Override
             public void OnClick() {
@@ -98,12 +110,10 @@ public class GameScreen extends Screen {
                     difDim = Var.hard_dim;
                     maxLevel = Var.hard_maxLevel;
                     createLevel();
-                    createFinished(3 + crtLevel / difDim, 3 + crtLevel / (difDim - 1));
+                    createFinished(3 + crtLevel / (maxLevel / 3), 3 + crtLevel / (maxLevel / 3)  + difDim / 5);
                 }
             }
         });
-        hardButton.setX(Var.WIDTH / 2 - hardButton.getWidth() / 2);
-        hardButton.setY(Var.HEIGHT / 2);
         insaneButton = new Button("INSANE", font, new ButtonHandler() {
             @Override
             public void OnClick() {
@@ -114,19 +124,47 @@ public class GameScreen extends Screen {
                     difDim = Var.insane_dim;
                     maxLevel = Var.insane_maxLevel;
                     createLevel();
-                    createFinished(3 + crtLevel / difDim, 3 + crtLevel / (difDim - 1));
+                    createFinished(3 + crtLevel / (maxLevel / 3), 3 + crtLevel / (maxLevel / 3)  + difDim / 5);
                 }
             }
         });
-        insaneButton.setX(Var.WIDTH / 2 - insaneButton.getWidth() / 2);
-        insaneButton.setY(Var.HEIGHT / 2 - deltaButton / 2);
 
         backButton = new Button("Back", font, new ScreenSwitchHandler(ScreenState.MAIN_MENU){
             @Override
             public void OnClick() {
-                super.OnClick();
                 if(Gdx.input.justTouched()){
+                    super.OnClick();
                     backButton.setClickColor();
+                    if(SettingsScreen.isSoundOn())AssetLoader.getClickSound().play();
+                    crtLevel = 1;
+                    score = 0;
+                    selected = false;
+                    over = false;
+                }
+            }
+        });
+
+        playAgainButton = new Button("Play Again", font, new ButtonHandler() {
+            @Override
+            public void OnClick() {
+                if(Gdx.input.justTouched()){
+                    playAgainButton.setClickColor();
+                    if(SettingsScreen.isSoundOn())AssetLoader.getClickSound().play();
+                    crtLevel = 1;
+                    score = 0;
+                    selected = false;
+                    over = false;
+                    scoreLabel.setX(centerX - (scoreLabel.getWidth()) / 2);
+                    scoreLabel.setY(Var.HEIGHT - lineHeight);
+                }
+            }
+        });
+        exitButton = new Button("Exit", font, new ButtonHandler() {
+            @Override
+            public void OnClick() {
+                if(Gdx.input.justTouched()){
+                    if(SettingsScreen.isSoundOn())AssetLoader.getClickSound().play();
+                    Gdx.app.exit();
                 }
             }
         });
@@ -138,7 +176,7 @@ public class GameScreen extends Screen {
 
     public void createLevel() {
 
-        endTimer = difDim * 4;
+        endTimer = difDim * 3;
         tiles = new Tile[difDim][difDim];
         tileSize = Var.WIDTH / tiles.length;
         boardHeight = tileSize * tiles.length;
@@ -154,7 +192,7 @@ public class GameScreen extends Screen {
                         new Tile(col * tileSize + tileSize / 2,
                                 row * tileSize + tileSize / 2 + margin,
                                 tileSize, tileSize, colorNum);
-                tiles[row][col].setMaxCol(3 + crtLevel / difDim);
+                tiles[row][col].setMaxCol(3 + crtLevel / (maxLevel / 3));
             }
         }
 
@@ -216,35 +254,63 @@ public class GameScreen extends Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.draw(AssetLoader.getBackground(), 0, 0, Var.WIDTH, Var.HEIGHT);
-        backButton.draw(batch, camera);
-        if(!selected){
-            batch.draw(AssetLoader.getBackground(), 0, 0, Var.WIDTH, Var.HEIGHT);
-            easyButton.draw(batch, camera);
-            mediumButton.draw(batch, camera);
-            hardButton.draw(batch, camera);
-            insaneButton.draw(batch, camera);
-            label.draw(batch);
-        }
-        else {
-            updateScore(deltaTime);
-            scoreLabel.setCaption("Score: " + "  " + (int)score);
-            scoreLabel.draw(batch);
-            update(deltaTime);
-            animationPlaying = false;
-            for (int row = 0; row < tiles.length; row++) {
-                for (int col = 0; col < tiles.length; col++) {
-                    tiles[row][col].render(batch);
-                    if (tiles[row][col].animationPlaying()) {
-                        animationPlaying = true;
+        if(!over) {
+            if (!selected) {
+                batch.draw(AssetLoader.getBackground(), 0, 0, Var.WIDTH, Var.HEIGHT);
+                backButton.setX(centerX - backButton.getWidth() / 2);
+                backButton.setY(centerY - 4 * lineHeight);
+                backButton.draw(batch, camera);
+                easyButton.draw(batch, camera);
+                mediumButton.draw(batch, camera);
+                hardButton.draw(batch, camera);
+                insaneButton.draw(batch, camera);
+                label.draw(batch);
+            } else {
+                updateScore(deltaTime);
+                scoreLabel.setCaption("Score: " + "  " + (int) score);
+                scoreLabel.draw(batch);
+                remainTime.setCaption("Time: " + Math.round(endTimer * 100.0) / 100.0);
+                remainTime.draw(batch);
+                roundLabel.setCaption("(" + crtLevel + "/" + maxLevel + ")");
+                roundLabel.draw(batch);
+                backButton.setX(centerX - exitButton.getWidth() / 2);
+                backButton.setY(70);
+                backButton.draw(batch, camera);
+                update(deltaTime);
+                animationPlaying = false;
+                for (int row = 0; row < tiles.length; row++) {
+                    for (int col = 0; col < tiles.length; col++) {
+                        tiles[row][col].render(batch);
+                        if (tiles[row][col].animationPlaying()) {
+                            animationPlaying = true;
+                        }
                     }
                 }
             }
+        }
+        else{
+            if(score > SettingsScreen.prefs.getInteger("highscore")){
+                SettingsScreen.prefs.putInteger("highscore", (int) score);
+                SettingsScreen.prefs.flush();
+                highscoreLabel.setCaption("Highscore: " + SettingsScreen.prefs.getInteger("highscore"));
+            }
+            else  highscoreLabel.setCaption("Highscore: " + SettingsScreen.prefs.getInteger("highscore"));
+            highscoreLabel.setX(centerX - scoreLabel.getWidth() / 2);
+            highscoreLabel.setY(centerY + 2 * lineHeight);
+            scoreLabel.setCaption("Your score: " + (int) score);
+            scoreLabel.setX(Var.WIDTH / 2 - scoreLabel.getWidth() / 2);
+            scoreLabel.setY(Var.HEIGHT + lineHeight);
+            exitButton.draw(batch, camera);
+            playAgainButton.draw(batch, camera);
+            scoreLabel.draw(batch);
+            highscoreLabel.draw(batch);
+
         }
         batch.end();
     }
 
     public void update(float deltaTime) {
-        endTimer -= deltaTime;
+        if(!displaySol) { endTimer -= deltaTime; }
         solPlayed(deltaTime);
         if(!Gdx.input.isTouched()) { release = true; }
         if(!displaySol && Gdx.input.isTouched() && release && !isFinished()) {
@@ -259,10 +325,10 @@ public class GameScreen extends Screen {
                     if(SettingsScreen.isSoundOn()) { AssetLoader.getGoodSound().play(); }
                     crtLevel++;
                     createLevel();
-                    createFinished(3 + crtLevel / 6, 3 + crtLevel / 5);
+                    createFinished(3 + crtLevel / (maxLevel / 3), 3 + crtLevel / (maxLevel / 3) + difDim / 5);
                 }
                 else if(isFinished()){
-                    //game over
+                    over = true;
                 }
             }
             release = false;
@@ -272,13 +338,16 @@ public class GameScreen extends Screen {
                 tiles[row][col].update(deltaTime);
             }
         }
-        if(endTimer <= 0){
+        if(endTimer <= 0 && crtLevel < maxLevel){
             if(SettingsScreen.isSoundOn()) { AssetLoader.getBadSound().play(); }
             crtLevel++;
             createLevel();
-            createFinished(3 + crtLevel / difDim, 3 + crtLevel / (difDim - 1) + difDim / 5);
+            createFinished(3 + crtLevel / (maxLevel / 3), 3 + crtLevel / (maxLevel / 3) + difDim / 5);
         }
-
+        else if(endTimer <= 0) {
+            if(SettingsScreen.isSoundOn()) { AssetLoader.getBadSound().play(); }
+            over = true;
+        }
     }
 
     public void updateScore(float deltaTime) {
@@ -295,14 +364,19 @@ public class GameScreen extends Screen {
     public void resize(int width, int height) {
         int centerX = width / 2;
         int centerY = height / 2;
+        this.centerX = centerX;
+        this.centerY = centerY;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Var.WIDTH, Var.HEIGHT);
         label.setX(centerX - label.getWidth() / 2);
         label.setY(centerY + 3 * lineHeight);
-        scoreLabel.setX(centerX - (scoreLabel.getWidth()) / 2);
-        scoreLabel.setY(Var.HEIGHT - lineHeight);
-        backButton.setX(centerX - (backButton.getWidth() * 4));
-        backButton.setY(Var.HEIGHT - lineHeight);
+        remainTime.setX(Var.WIDTH / 2 - remainTime.getWidth() / 2);
+        remainTime.setY(Var.HEIGHT - Var.HEIGHT / 15 - lineHeight);
+        scoreLabel.setX(Var.WIDTH / 2 - scoreLabel.getWidth() / 2);
+        scoreLabel.setY(Var.HEIGHT - Var.HEIGHT / 15);
+        roundLabel.setX(centerX - remainTime.getWidth() / 2 + 2 * roundLabel.getWidth());
+        roundLabel.setY(Var.HEIGHT - Var.HEIGHT / 15 - lineHeight);
+
         easyButton.setX(centerX - easyButton.getWidth() / 2);
         easyButton.setY(centerY + lineHeight);
         mediumButton.setX(centerX - mediumButton.getWidth() / 2);
@@ -311,6 +385,10 @@ public class GameScreen extends Screen {
         hardButton.setY(centerY - lineHeight);
         insaneButton.setX(centerX - insaneButton.getWidth() / 2);
         insaneButton.setY(centerY - 2 * lineHeight);
+        playAgainButton.setX(centerX - playAgainButton.getWidth() / 2);
+        playAgainButton.setY(centerY);
+        exitButton.setX(centerX - exitButton.getWidth() / 2);
+        exitButton.setY(centerY - lineHeight);
     }
 
     @Override
